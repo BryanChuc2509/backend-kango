@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_restx import Api
 from .modules.drivers.drivers_controller import api as driver_api
+from .modules.places.places import api as places_api
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -19,6 +20,7 @@ api.add_namespace(driver_api, path="/api/drivers")
 # Registrar el namespace de payments
 
 # Registrar el namespace de places
+api.add_namespace(places_api, path="/api/places")
 
 # Registrar el namespace de reservations
 
