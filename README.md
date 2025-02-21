@@ -8,7 +8,7 @@ git clone https://github.com/BryanChuc2509/backend-kango
 
 2. Create a virtual enviroment :
 ``` 
-cd backend
+cd backend-kango
 py -3 -m venv .venv
 ``` 
 
@@ -21,9 +21,8 @@ py -3 -m venv .venv
 ``` 
 cd app
 pip install -r requirements.txt
-``` 
-
-5. Create and change to the new branch:
+```
+5. Create and change to the new branch (based on main):
 ```
 git checkout -b feature_new_branch
 ```
@@ -42,6 +41,12 @@ git commit -m "description about your changes"
 git push origin feature_new_branch
 ```
 
+## Run App
+if you are in backend-kango/app
+``` 
+cd ..
+flask --app app.app run
+```
 
 # Aditionals Dependences 
 ! Add your dependences if you need it 
