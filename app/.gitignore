@@ -1,0 +1,37 @@
+#  Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+#  Backend - Flask
+.venv
+backend/app/__pycache__
+backend/__pycache__/
+**/__pycache__/
+backend/app/**/__pycache__/
+
+app/.env
+app/.DS_Store
+app/migrations/
+
+# Frontend - React/Node.js
+frontend/node_modules/
+frontend/.env
+frontend/.DS_Store
+frontend/build/
+frontend/dist/
+frontend/dist-ssr/
+
+#  Archivos de configuración del sistema y editores
+.vscode/
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

@@ -21,7 +21,7 @@ def dbConnect():
         print(e)
         return None
     
-
+db = dbConnect()
 
 #Trata de conectar a la bd, si no existe, se crea
 def get_database():
@@ -42,4 +42,3 @@ def get_database():
         print(f"Error al conectar con MongoDB: {e}")
         return None
 
-# database = get_database()
