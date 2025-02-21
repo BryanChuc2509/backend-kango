@@ -23,11 +23,11 @@ def dbConnect():
     
 
 
-#Trata de conectar a la bd, si no existe, se crea
+#Trata de conectar a la bd dentro del cluster, si no existe, se crea
 def get_database():
     try:
         client = MongoClient(uri, server_api=ServerApi("1"), tlsCAFile=ca)
-        db = client["dbb_products_app"]
+        db = client["kankunDBT"]
 
         # Verifica si la colección existe
         collection_name = "products"  # Nombre de la coleccion a verificar
