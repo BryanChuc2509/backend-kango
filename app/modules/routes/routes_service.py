@@ -1,4 +1,4 @@
-from app.database import dbConnect
+from database import dbConnect
 from bson.json_util import dumps, ObjectId
 from flask import jsonify
 import logging

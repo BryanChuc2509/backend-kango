@@ -3,6 +3,8 @@ from flask_restx import Api
 from flask_cors import CORS
 from modules.auth.auth_routes import api as auth_api
 from modules.drivers.drivers_controller import api as driver_api
+from modules.routes.routes_controller import api as routes_api
+from modules.metrics.metrics_controller import api as metrics_api
 from database import dbConnect
 from bson import ObjectId
 
@@ -66,6 +68,7 @@ api.add_namespace(auth_api, path="/auth")
 api.add_namespace(driver_api, path="/api/drivers")
 
 # Registrar el namespace de metrics
+api.add_namespace(metrics_api, path="/api/metrics")
 
 # Registrar el namespace de payments
 
@@ -74,6 +77,8 @@ api.add_namespace(driver_api, path="/api/drivers")
 # Registrar el namespace de reservations
 
 # Registrar el namespace de routes
+api.add_namespace(routes_api, path="/api/routes")
+
 
 # Registrar el namespace de vehicles
 
