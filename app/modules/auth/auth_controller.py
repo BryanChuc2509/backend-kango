@@ -8,36 +8,55 @@ import pyotp
 from config.settings import Config
 from modules.auth.auth_models import Pasajero, Admin
 
+# Importar librerías para generar QR
+import qrcode
+import io
+import base64
+
 GOOGLE_CLIENT_ID = "973428652330-pf4rncidpkqktjhnfr12vmf63h9l3rrg.apps.googleusercontent.com"  
 
 class AuthController:
-#Registrar un nuevo pasajero con autenticación 2FA
+
     @staticmethod
     def register(data):
-        """Registra un nuevo pasajero con autenticación 2FA"""
-        if not all(k in data for k in ["nombre", "apellido", "correo_electronico", "numero_telefonico", "password"]):
-            return {"error": "Todos los campos son obligatorios"}, 400
+        """Registra un nuevo pasajero con autenticación 2FA y genera el QR para Google Authenticator"""
+        # Verificar que todos los campos estén presentes y no vacios
+        required_fields = ["nombre", "apellido", "correo_electronico", "numero_telefonico", "password"]
+        for field in required_fields:
+            if field not in data or not data[field].strip():
+                return {"error": f"El campo '{field}' es obligatorio y no puede estar vacío."}, 400
 
-        email = data["correo_electronico"]
+        email = data["correo_electronico"].strip()
 
         if Pasajero.find_by_email(email):
             return {"error": "El correo ya está registrado"}, 400
 
         pasajero = Pasajero(
-            nombre=data["nombre"],
-            apellido=data["apellido"],
+            nombre=data["nombre"].strip(),
+            apellido=data["apellido"].strip(),
             correo_electronico=email,
-            numero_telefonico=data["numero_telefonico"],
-            password=data["password"]
+            numero_telefonico=data["numero_telefonico"].strip(),
+            password=data["password"].strip()
         )
 
         Pasajero.save(pasajero)
 
+        # Generar el url del Authenticator
+        totp = pyotp.TOTP(pasajero.otp_secret)
+        provisioning_uri = totp.provisioning_uri(name=email, issuer_name="KanGo")
+
+        # Generar el QR  a partir del url
+        qr_img = qrcode.make(provisioning_uri)
+        buffered = io.BytesIO()
+        qr_img.save(buffered, format="PNG")
+        qr_base64 = base64.b64encode(buffered.getvalue()).decode("utf-8")
+
         return {
             "message": "Pasajero registrado correctamente",
-            "otp_secret": pasajero.otp_secret  
+            "otp_secret": pasajero.otp_secret,
+            "qr": qr_base64  # Este string se usa para mostrar la imagen en el front />
         }, 201
-#Login con autenticación 2FA
+
     @staticmethod
     def login(data):
         """Inicio de sesión con 2FA para pasajeros y admins"""
@@ -54,12 +73,10 @@ class AuthController:
         if not Pasajero.verify_password(user["password"], password):
             return {"error": "Contraseña incorrecta"}, 400
 
-        # Validar OTP
         totp = pyotp.TOTP(user["otp_secret"])
         if not totp.verify(otp_code):
             return {"error": "Código 2FA incorrecto"}, 400
 
-        # Genera JWT para la sesión
         token = jwt.encode(
             {
                 "correo_electronico": email,
@@ -75,7 +92,7 @@ class AuthController:
             "token": token,
             "rol": user["rol"],
         }, 200
-# Login con google
+
     @staticmethod
     def google_login(data):
         """Autenticación con Google"""
@@ -91,22 +108,19 @@ class AuthController:
             nombre = google_data.get("given_name", "Usuario")
             apellido = google_data.get("family_name", "")
 
-            # Verificar si el usuario ya existe
             user = Pasajero.find_by_email(email)
             if not user:
-                # Crear usuario si no existe
                 new_user = Pasajero(
-                    nombre=nombre,
-                    apellido=apellido,
-                    correo_electronico=email,
+                    nombre=nombre.strip(),
+                    apellido=apellido.strip(),
+                    correo_electronico=email.strip(),
                     numero_telefonico="",
                     password="google_oauth"  
                 )
                 Pasajero.save(new_user)
                 user = new_user.to_dict()
 
-            # Generar token JWT para la sesión
-            token = jwt.encode(
+            jwt_token = jwt.encode(
                 {
                     "correo_electronico": email,
                     "rol": user["rol"],
@@ -118,7 +132,7 @@ class AuthController:
 
             return {
                 "message": "Inicio de sesión exitoso con Google",
-                "token": token,
+                "token": jwt_token,
                 "rol": user["rol"],
             }, 200
 
