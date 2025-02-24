@@ -55,63 +55,6 @@ class PlacesService:
             logger.error(f"Error al obtener lugares: {str(e)}")
             return {"error": "Error al obtener los lugares"}, 500
 
-    from app.database import dbConnect
-from bson.json_util import dumps, ObjectId
-from flask import jsonify
-import logging
-from typing import Dict, Tuple, Any
-
-logging.basicConfig(
-    filename='app.log',
-    level=logging.ERROR,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-
-logger = logging.getLogger(__name__)
-
-class PlacesService:
-    def __init__(self):
-        self.db = dbConnect()
-        if self.db is not None:
-            self.places_collection = self.db["destinos"]
-        else:
-            self.places_collection = None
-            logger.error("No se pudo establecer conexión con la base de datos")
-
-    def validate_place_data(self, place_data: Dict) -> Tuple[bool, str]:
-        """Validar los datos del lugar"""
-        required_fields = ["nombre", "cordenadas", "direccion", "estado"]
-        missing_fields = [
-            field for field in required_fields 
-            if field not in place_data or not str(place_data[field]).strip()
-        ]
-
-        if missing_fields:
-            return False, f"Faltan los siguientes campos obligatorios: {', '.join(missing_fields)}"
-        return True, ""
-
-    def get_places(self) -> Tuple[Dict, int]:
-        """Obtener todos los lugares"""
-        if self.db is None:
-            logger.error("Error de conexión a la base de datos en get_places")
-            return {"error": "No se pudo conectar a la base de datos"}, 500
-
-        try:
-            places = list(self.places_collection.find({}))
-
-            if not places:
-                return {"message": "No hay lugares registrados"}, 404
-
-            # Convertir ObjectId a string
-            for place in places:
-                place["_id"] = str(place["_id"])
-
-            return {"places": places}, 200
-
-        except Exception as e:
-            logger.error(f"Error al obtener lugares: {str(e)}")
-            return {"error": "Error al obtener los lugares"}, 500
-
     def get_place(self, place_id: str) -> Tuple[Dict, int]:
         """Obtener un lugar por ID"""
         if self.db is None:
