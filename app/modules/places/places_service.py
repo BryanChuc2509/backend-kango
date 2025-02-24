@@ -105,7 +105,6 @@ class PlacesService:
             return {
                 "message": "Lugar agregado exitosamente",
                 "id": str(result.inserted_id),
-                "place": place_data
             }, 201
 
         except Exception as e:
