@@ -7,10 +7,11 @@ from modules.routes.routes_controller import api as routes_api
 from modules.metrics.metrics_controller import api as metrics_api
 from database import dbConnect
 from bson import ObjectId
+from modules.vehicles.vehicles_controller import api as vehicles_api
 
 
 app = Flask(__name__)
-CORS(app, supports_credentials=True, origins="http://localhost:5173")
+CORS(app, supports_credentials=True, origins="*")
 
 
 api = Api(app, version="1.0", title="API de Gestión de Conductores", description="Documentación con Flask-RESTx")
@@ -81,6 +82,7 @@ api.add_namespace(routes_api, path="/api/routes")
 
 
 # Registrar el namespace de vehicles
+api.add_namespace(vehicles_api, path="/api/vehicles")
 
 
 if __name__ == '__main__':
