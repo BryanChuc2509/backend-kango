@@ -8,7 +8,7 @@ api = Namespace("drivers", description="Operaciones con conductores")
 # Modelo de datos para la documentación de Swagger
 driver_model = api.model("Driver", {
     "nombre": fields.String(required=True, description="Nombre del conductor"),
-    "apellido": fields.String(required=True, description="Número de licencia"),
+    "apellido": fields.String(required=True, description="Apellido del conductor"),
     "correo_electronico": fields.String(required=True, description="Correo electronico"),
     "numero_telefonico": fields.String(required=True, description="Número telefónico"),
     "licencia_valida": fields.String(required=True, description="licencia valida"),
