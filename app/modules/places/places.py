@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_restx import Namespace, Resource, fields
-from app.modules.places.places_service import PlacesService
+from .places_service import PlacesService
 
 # Inicializar API de lugares
 places_service = PlacesService()
