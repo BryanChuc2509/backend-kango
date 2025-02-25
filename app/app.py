@@ -9,6 +9,7 @@ from database import dbConnect
 from bson import ObjectId
 from modules.places.places import api as places_api
 from modules.vehicles.vehicles_controller import api as vehicles_api
+from modules.reservations.reservations_controller import api as reservations_api
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True, origins="*")
@@ -76,6 +77,7 @@ api.add_namespace(metrics_api, path="/api/metrics")
 api.add_namespace(places_api, path="/api/places")
 
 # Registrar el namespace de reservations
+api.add_namespace(reservations_api, path="/api/reservations")
 
 # Registrar el namespace de routes
 api.add_namespace(routes_api, path="/api/routes")
