@@ -88,9 +88,10 @@ class AuthController:
         )
 
         return {
-            "message": "Inicio de sesión exitoso",
-            "token": token,
-            "rol": user["rol"],
+           "message": "Inicio de sesión exitoso",
+           "token": token,
+           "rol": user["rol"],
+           "id": user["id"]  
         }, 200
 
     @staticmethod
@@ -134,6 +135,7 @@ class AuthController:
                 "message": "Inicio de sesión exitoso con Google",
                 "token": jwt_token,
                 "rol": user["rol"],
+                "id": user["id"]  
             }, 200
 
         except Exception as e:

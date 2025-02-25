@@ -5,15 +5,17 @@ from modules.auth.auth_routes import api as auth_api
 from modules.drivers.drivers_controller import api as driver_api
 from modules.routes.routes_controller import api as routes_api
 from modules.metrics.metrics_controller import api as metrics_api
+from modules.reservations.reservations_routes import reservas_bp
+from modules.payments.routes import api as payments_api
 from database import dbConnect
 from bson import ObjectId
-
+  
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True, origins="http://localhost:5173")
 
 
-api = Api(app, version="1.0", title="API de Gestión de Conductores", description="Documentación con Flask-RESTx")
+api = Api(app, version="1.0", title="API de KanGo", description="Documentación con Flask-RESTx")
 
 # Esto se va a añadir al servicio de pasajeros, para obtener datos de la bd. Aquí empieza
 db = dbConnect()
@@ -71,7 +73,9 @@ api.add_namespace(driver_api, path="/api/drivers")
 api.add_namespace(metrics_api, path="/api/metrics")
 
 # Registrar el namespace de payments
-
+api.add_namespace(payments_api, path="/payments")
+# devuelve el precio de cada reserva
+app.register_blueprint(reservas_bp)
 # Registrar el namespace de places
 
 # Registrar el namespace de reservations
