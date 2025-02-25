@@ -7,6 +7,8 @@ from modules.routes.routes_controller import api as routes_api
 from modules.metrics.metrics_controller import api as metrics_api
 from database import dbConnect
 from bson import ObjectId
+from modules.places.places import api as places_api
+
 
 
 app = Flask(__name__)
@@ -61,7 +63,6 @@ def structure():
 # Aquí termina 
 
 # Registrar el namespace de auth
-
 api.add_namespace(auth_api, path="/auth")
 
 # Registrar el namespace de conductores
@@ -73,6 +74,7 @@ api.add_namespace(metrics_api, path="/api/metrics")
 # Registrar el namespace de payments
 
 # Registrar el namespace de places
+api.add_namespace(places_api, path="/api/places")
 
 # Registrar el namespace de reservations
 
