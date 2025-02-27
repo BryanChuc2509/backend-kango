@@ -57,7 +57,7 @@ class DriverService:
                 return {"error": f"Faltan los siguientes campos obligatorios: {', '.join(missing_fields)}"}, 400
 
             driver = self.drivers_collection.find_one({
-                "apellido": driver_data["apellido"]
+                "numero_telefonico": driver_data["numero_telefonico"]
             })
             if driver:
                 return {"error": "El conductor ya existe"}, 400

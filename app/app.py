@@ -5,15 +5,20 @@ from modules.auth.auth_routes import api as auth_api
 from modules.drivers.drivers_controller import api as driver_api
 from modules.routes.routes_controller import api as routes_api
 from modules.metrics.metrics_controller import api as metrics_api
+from modules.reservations.reservations_routes import reservas_bp
+from modules.payments.routes import api as payments_api
 from database import dbConnect
 from bson import ObjectId
-
+from modules.places.places import api as places_api
+from modules.vehicles.vehicles_controller import api as vehicles_api
+from modules.reservations.reservations_controller import api as reservations_api
+from modules.payments.routes import api as payments_api
 
 app = Flask(__name__)
-CORS(app, supports_credentials=True, origins="http://localhost:5173")
+CORS(app, supports_credentials=True, origins="*")
 
 
-api = Api(app, version="1.0", title="API de Gestión de Conductores", description="Documentación con Flask-RESTx")
+api = Api(app, version="1.0", title="API de KanGo", description="Documentación con Flask-RESTx")
 
 # Esto se va a añadir al servicio de pasajeros, para obtener datos de la bd. Aquí empieza
 db = dbConnect()
@@ -61,7 +66,6 @@ def structure():
 # Aquí termina 
 
 # Registrar el namespace de auth
-
 api.add_namespace(auth_api, path="/auth")
 
 # Registrar el namespace de conductores
@@ -71,16 +75,21 @@ api.add_namespace(driver_api, path="/api/drivers")
 api.add_namespace(metrics_api, path="/api/metrics")
 
 # Registrar el namespace de payments
-
+api.add_namespace(payments_api, path="/payments")
+# devuelve el precio de cada reserva
+app.register_blueprint(reservas_bp)
 # Registrar el namespace de places
+api.add_namespace(places_api, path="/api/places")
 
 # Registrar el namespace de reservations
+api.add_namespace(reservations_api, path="/api/reservations")
 
 # Registrar el namespace de routes
 api.add_namespace(routes_api, path="/api/routes")
 
 
 # Registrar el namespace de vehicles
+api.add_namespace(vehicles_api, path="/api/vehicles")
 
 
 if __name__ == '__main__':
